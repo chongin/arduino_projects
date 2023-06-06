@@ -17,7 +17,7 @@ void loop()
   current_joy_stick->UpdateCommand();
   if (current_joy_stick->CurrentCommand() != CommandEnum::None)
   {
-    Serial.println("DoSomething:" + current_joy_stick->GetCommandStr());
+    Serial.println("Detect Operation:" + current_joy_stick->GetCommandStr());
     game->HandleCommand(current_joy_stick->CurrentCommand());
   }
   

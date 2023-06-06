@@ -31,7 +31,15 @@ public:
 
   void UpdateFormula()
   {
-    //_formula += ch;
+    char ch = lcd_Mgr->GetCurrentSelection();
+    Serial.print("Update before: " + _formula);
+    Serial.print(",Update Formula: ");
+    Serial.print(ch);
+
+    _formula += ch;
+    Serial.println(",Update after: " + _formula);
+
+    lcd_Mgr->ResetSelection();
   }
 
   void IsGameOver()
@@ -122,7 +130,8 @@ private:
   }
 private:
   LCDMgr * lcd_Mgr = NULL;
-  String _formula = "3+4*5-6/3";
+  //String _formula = "3+4*5-6/3";
+  String _formula;
   GameState _game_state;
   int _seconds = millis() / 1000;
   int _game_id = 0;

@@ -78,14 +78,25 @@ public:
     _current_number_index = 0;
   }
 
-  void MoveForward()
+  char GetCurrentSelection()
   {
-
+    if (_default_show_number)
+    {
+      char ch = '0' + _numberArray[_current_number_index];
+      Serial.print("Current Selection: ");
+      Serial.println(ch);
+      return ch;
+    } else 
+    {
+      return _symbol_options[_current_option_index];
+    }
   }
 
-  void MoveBackward()
+  void ResetSelection()
   {
-
+    _current_option_index = 0;
+    _current_number_index = 0;
+    _default_show_number = true;
   }
 
 private:
