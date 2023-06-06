@@ -1,12 +1,14 @@
 #include "joystick.h"
-#include "game.h"
+#include "game_manager.h"
 
 JoyStick * current_joy_stick = NULL;
 Game* game = NULL;
+GameManager* game_mgr = NULL;
 
 const int LED_PIN = 9;
 const int BUTTON_PIN = 8;
 const int buzzerPin = 7;
+
 void setup() 
 {
   pinMode(LED_PIN, OUTPUT);
@@ -15,8 +17,9 @@ void setup()
 
   Serial.begin(9600);
   current_joy_stick = new JoyStick();
-  game = new Game();
-  game->Start();
+
+  game_mgr = new GameManager();
+  game_mgr->CreateNewGame();
 }
 
 void loop() 
@@ -25,12 +28,12 @@ void loop()
   if (current_joy_stick->CurrentCommand() != CommandEnum::None)
   {
     Serial.println("Detect Operation:" + current_joy_stick->GetCommandStr());
-    game->HandleCommand(current_joy_stick->CurrentCommand());
-  }
-  
-  CheckGameResult();
 
-  game->Update();
+    game_mgr->GetCurrentGame()->HandleCommand(current_joy_stick->CurrentCommand());
+  }
+
+  CheckGameResult();
+  game_mgr->GetCurrentGame()->Update();
 
   delay(600);
 }
@@ -38,25 +41,24 @@ void loop()
 void CheckGameResult()
 {
   int val = digitalRead(BUTTON_PIN);
-  if (val == HIGH)
-  {
+  if (val == HIGH) {
     digitalWrite(LED_PIN, LOW);
   } else {
     digitalWrite(LED_PIN, HIGH);
-    game->CalculateResult();
+    game_mgr->GetCurrentGame()->CalculateResult();
     WinHandling();
   }
 }
 
 void WinHandling()
 {
-  if (game->IsWin()) {
+  if (game_mgr->GetCurrentGame()->IsWin()) {
     playWinSound(buzzerPin);
     Serial.println("Win");
-  } else if (game->IsLost()) {
+  } else if (game_mgr->GetCurrentGame()->IsLost()) {
     playLostSound(buzzerPin);
     Serial.println("Lost");
-  } else if (game->IsFail()) {
+  } else if (game_mgr->GetCurrentGame()->IsFail()) {
     playFailSound(buzzerPin);
     Serial.println("Fail");
   }

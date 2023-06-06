@@ -1,5 +1,6 @@
+#pragma once
 #include <LiquidCrystal.h>
-#include "LcdDisplay.h"
+#include "lcd_display.h"
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 const int ContrastValue = 100;
@@ -36,7 +37,6 @@ public:
   {
     lcd.clear();
     _lcd_grphic->DrawTime(seconds, 0);
-
     _flashing_value++;
     if (formula.length() > 0)
     {
@@ -145,7 +145,7 @@ public:
 private:
 
 private:
-  LcdGrphic* _lcd_grphic;
+  LcdGrphic* _lcd_grphic = NULL;
   int _current_row;
   int _current_col;
   

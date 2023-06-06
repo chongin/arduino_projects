@@ -1,4 +1,4 @@
-
+#pragma once
 
 #define LEFT_THRESHOLD  400
 #define RIGHT_THRESHOLD 800

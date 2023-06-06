@@ -1,11 +1,19 @@
-#include "Lcd.h"
+#pragma once
 #include "formula_calculator.h"
-#include "game_deck_generator.h"
+
+struct GameData {
+  int* Cards; 
+  int CarSize;
+  int GameID;
+  GameData(int* cards, int car_size, int game_id): Cards(cards), CarSize(car_size),
+    GameID(game_id)
+  {
+  }
+};
 
 enum GameState
 {
-  Inited = 0,
-  Started,
+  Started = 0,
   Win,
   Lost,
   Failed
@@ -14,58 +22,60 @@ enum GameState
 class Game
 {
 public:
-  Game()
+  Game(LCDMgr* game_scene, GameData* game_data)
   {
-    _game_state = GameState::Inited;
-    lcd_Mgr = new LCDMgr();
-    _game_deck_generator = new GameDeckGenerator();
+    _game_state = GameState::Started;
+    _game_scene = game_scene;
+    _game_data = game_data;
   }
 
-  void Start()
+  ~Game()
   {
-    _game_id++;
-    int* one_set = _game_deck_generator->RandomOneSet();
-    lcd_Mgr->SetNumbers(one_set, _game_deck_generator->GetCardNumber());
+    delete _game_data;
   }
 
   void Update()
   {
-    lcd_Mgr->UpdateView(_formula, GetSeconds());
+    _game_scene->UpdateView(_formula, GetSeconds());
   }
 
   void UpdateFormula()
   {
-    char ch = lcd_Mgr->GetCurrentSelection();
+    char ch = _game_scene->GetCurrentSelection();
     Serial.print("Update before: " + _formula);
-    Serial.print(",Update Formula: ");
+    Serial.print(",Add char: ");
     Serial.print(ch);
 
     _formula += ch;
     Serial.println(",Update after: " + _formula);
 
-    lcd_Mgr->RemoveCurrentSelection();
-    lcd_Mgr->ResetSelection();
+    _game_scene->RemoveCurrentSelection();
+    _game_scene->ResetSelection();
   }
 
   void CalculateResult()
   {
+    if (_game_state != GameState::Started) {
+      Serial.print("This game already close: cannot calculate formula again.");
+      return;
+    }
+
     bool res = false;
     float result = CalcFormula(_formula, res);
-    if (res)
-    {
-      Serial.print("result: ");
+    if (res) {
+      Serial.print("CalcFormula success, result: ");
       Serial.println(result);
-      _formula += "=" + String(result);
+      _formula += "=" + keepOnePrecision(result);
 
-      if (result - 24 < 0.0001)
-      {
+      if (abs(result - 24) < 0.0001) {
         _game_state = GameState::Win;
       } else {
         _game_state = GameState::Lost;
       }
     }
     else {
-       _game_state = GameState::Failed;
+      _game_state = GameState::Failed;
+      Serial.print("CalcFormula failed,  maybe formula is wrong.");
     }
 
     PrintGameInfo();
@@ -76,17 +86,16 @@ public:
     switch(command)
     {
       case CommandEnum::Left:
-        lcd_Mgr->ChangeShowOption();
+        _game_scene->ChangeShowOption();
         break;
       case CommandEnum::Right:
-        //CalculateResult();
         UpdateFormula();
         break;
       case CommandEnum::Up:
-        lcd_Mgr->IncreaseOptionIndex();
+        _game_scene->IncreaseOptionIndex();
         break;
       case CommandEnum::Down:
-        lcd_Mgr->DecreaseOptionIndex();
+        _game_scene->DecreaseOptionIndex();
         break;
     }
   }
@@ -113,9 +122,6 @@ private:
     String state = "";
     switch(_game_state)
     {
-      case GameState::Inited:
-        state = "Inited";
-        break;
       case GameState::Started:
         state = "Started";
         break;
@@ -135,16 +141,24 @@ private:
   void PrintGameInfo()
   {
     Serial.print("game_id: ");
-    Serial.print(_game_id);
+    Serial.print(_game_data->GameID);
     Serial.print(",game_state:");
     Serial.println(GetGameStateStr());
   }
+
+  String keepOnePrecision(float number) {
+    char result[8];
+    int intPart = int(number);
+    int decimalPart = int(number * 10) % 10;
+
+    snprintf(result, sizeof(result), "%d.%d", intPart, decimalPart);
+    return String(result);
+  }
 private:
-  LCDMgr * lcd_Mgr = NULL;
-  GameDeckGenerator * _game_deck_generator = NULL;
+  LCDMgr * _game_scene = NULL;
+  GameData* _game_data = NULL;
   String _formula = "3+4*5-6/3";
   //String _formula;
   GameState _game_state;
   int _seconds = millis() / 1000;
-  int _game_id = 0;
 };

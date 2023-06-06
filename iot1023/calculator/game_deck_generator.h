@@ -1,7 +1,8 @@
 
+#pragma once
 const int MAX_QUEUE = 30;
 
-//reference this website to generate this decks:
+//I reference this website to generate this decks:
 //https://rosettacode.org/wiki/24_game/Solve#C++
 class GameDeckGenerator
 {

@@ -1,3 +1,4 @@
+#pragma once
 float evaluateFormula(String formula) {
   // Remove all whitespaces from the formula
   formula.replace(" ", "");
@@ -69,7 +70,7 @@ float CalcFormula(String formula, bool & result)
       result = false;
       return -9999.0;
     }
-    
+
     String subFormula = formula.substring(start_index + 1, end_index);
     //Serial.println("sub: " + subFormula);
     float value = CalcFormula(subFormula, result);
