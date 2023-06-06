@@ -65,17 +65,33 @@ public:
     int y_value = analogRead(VRY_PIN);
     printXY(x_value, y_value);
 
+    CommandEnum command = CommandEnum::None;
     if (x_value < LEFT_THRESHOLD)
-      _current_command = CommandEnum::Left;
+      command = command | CommandEnum::Left;
     else if (x_value > RIGHT_THRESHOLD)
-      _current_command = CommandEnum::Right;
-    if (y_value < UP_THRESHOLD)
-      _current_command = CommandEnum::Up;
-    else if (y_value > DOWN_THRESHOLD)
-      _current_command = CommandEnum::Down;
-    else
-      _current_command = CommandEnum::None;
+      command = command | CommandEnum::Right;
 
+    if (y_value < UP_THRESHOLD)
+      command = command | CommandEnum::Up;
+    else if (y_value > DOWN_THRESHOLD)
+      command = command | CommandEnum::Down;
+   
+    if (command & CommandEnum::Left) {
+      command = CommandEnum::Left;
+    }
+
+    if (command & CommandEnum::Right) {
+      command = CommandEnum::Right;
+    }
+
+    if (command & CommandEnum::Up) {
+      command = CommandEnum::Up;
+    }
+
+    if (command & CommandEnum::Down) {
+      command = CommandEnum::Down;
+    }
+    _current_command = command;
   }
 
 private:

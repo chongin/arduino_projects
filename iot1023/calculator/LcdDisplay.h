@@ -8,6 +8,22 @@ public:
     initializeGraphics();
   }
 
+  void DrawTime(int seconds, int row)
+  {
+    int cal_col = 0;
+    if (seconds / 10 > 0)
+    {
+      cal_col = 1;
+      if (seconds / 100 > 0)
+      {
+        cal_col += 1;
+      }
+    } 
+    
+    _lcd->setCursor(15 - cal_col, row);
+    _lcd->print(seconds);
+  }
+
   void DrawFlashingSymbol(int col, int row)
   {
     _lcd->setCursor(col, row);

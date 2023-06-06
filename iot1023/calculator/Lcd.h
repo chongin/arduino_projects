@@ -21,6 +21,8 @@ public:
   void UpdateDraw() 
   {
     lcd.clear();
+    _lcd_grphic->DrawTime((millis() / 1000) - _seconds, 0);
+
     _flashing_value++;
     if (_formula.length() > 0)
     {
@@ -124,6 +126,7 @@ private:
   int _current_number_index = 0;
   bool _default_show_number = true;
   int _flashing_value = 0;
+  int _seconds = millis() / 1000;
 };
 
 
