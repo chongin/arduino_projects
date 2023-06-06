@@ -5,6 +5,24 @@
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 const int ContrastValue = 100;
 
+const String Numbers = "N:";
+
+struct GameHistoryDrawing {
+  int WinTimes = 0;
+  int LostTimes = 0;
+  int FailTimes = 0;
+
+  int GetFailCount() {
+    return LostTimes + FailTimes;
+  }
+
+  String ToString() {
+    char buffer[20];
+    sprintf(buffer, "W:%dL:%d", WinTimes, GetFailCount());
+    return String(buffer);
+  }
+};
+
 class LCDMgr
 {
 public:
@@ -29,12 +47,22 @@ public:
 
     _number_size = 0;
   }
+
+  void UpdateWinHistoryData(int win, int lost, int fail) {
+    _game_history_drawing.WinTimes = win;
+    _game_history_drawing.LostTimes = lost;
+    _game_history_drawing.FailTimes = fail;
+  }
+
   void SetNumbers(int* number_array, int number_size)
   {
     if (_number_array != NULL)
     {
       delete _number_array;
     }
+
+    _orginal_number_array = number_array;
+    _orginal_size = number_size;
 
     _number_size = number_size;
     _number_array = new int[number_size]; //need deep copy
@@ -43,33 +71,15 @@ public:
       _number_array[i] = number_array[i];
     }
 
-    printNumberArray();
+    //printNumberArray();
   }
 
   void UpdateView(String formula, int seconds) 
   {
     lcd.clear();
-    _lcd_grphic->DrawTime(seconds, 0);
-    _flashing_value++;
-    if (formula.length() > 0)
-    {
-      _lcd_grphic->DrawString(formula, 0, _current_row);
-    }
 
-    int next_pos = formula.length();
-    if (_flashing_value % 2 == 0)
-    {
-      _lcd_grphic->DrawFlashingSymbol(next_pos, _current_row);
-    } 
-    else {
-      if (_default_show_number)
-      {
-        _lcd_grphic->DrawNumber(_number_array[_current_number_index], next_pos, _current_row);
-      }
-      else {
-        _lcd_grphic->DrawPicture(_symbol_options[_current_option_index], next_pos, _current_row);
-      }
-    }
+    UpdateFirstRowView(seconds);
+    UpdateSecondRowView(formula);
   }
 
   void IncreaseOptionIndex()
@@ -209,6 +219,49 @@ private:
     }
     Serial.println("");
   }
+
+private:
+  void UpdateFirstRowView(int seconds)
+  {
+     //Draw Numbers
+    _lcd_grphic->DrawString(Numbers, 0, 0);
+    for(int i = 0; i < _orginal_size; ++i)
+    {
+      Serial.println(String("FFFFFFFF:") + _orginal_number_array[i]);
+      _lcd_grphic->DrawNumber(_orginal_number_array[i], Numbers.length() + i, 0);
+    }
+
+    //Draw timer
+    _lcd_grphic->DrawTime(seconds, 0);
+
+    //Draw game history
+    int start_pos = 7;
+    _lcd_grphic->DrawString(_game_history_drawing.ToString(), start_pos, 0);
+  }
+
+  void UpdateSecondRowView(String formula)
+  {
+     _flashing_value++;
+    if (formula.length() > 0)
+    {
+      _lcd_grphic->DrawString(formula, 0, _current_row);
+    }
+
+    int next_pos = formula.length();
+    if (_flashing_value % 2 == 0)
+    {
+      _lcd_grphic->DrawFlashingSymbol(next_pos, _current_row);
+    } 
+    else {
+      if (_default_show_number)
+      {
+        _lcd_grphic->DrawNumber(_number_array[_current_number_index], next_pos, _current_row);
+      }
+      else {
+        _lcd_grphic->DrawPicture(_symbol_options[_current_option_index], next_pos, _current_row);
+      }
+    }
+  }
 private:
   LcdGrphic* _lcd_grphic = NULL;
   int _current_row;
@@ -219,10 +272,15 @@ private:
   int* _number_array = NULL;
   int _number_size = 0;
 
+  int* _orginal_number_array = NULL; //keep orginal data, to print the number
+  int _orginal_size = 0;
+
   int _current_option_index = 0;
   int _current_number_index = 0;
   bool _default_show_number = true;
   int _flashing_value = 0; //make the last digest flashing
+
+  GameHistoryDrawing _game_history_drawing;
 };
 
 
