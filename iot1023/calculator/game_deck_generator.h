@@ -1,5 +1,8 @@
 
 const int MAX_QUEUE = 30;
+
+//reference this website to generate this decks:
+//https://rosettacode.org/wiki/24_game/Solve#C++
 class GameDeckGenerator
 {
 public:
@@ -46,6 +49,10 @@ public:
     return _decks[rand];
   }
 
+  int GetCardNumber()
+  {
+    return 4;
+  }
 private:
   int (*_decks)[4];
 };

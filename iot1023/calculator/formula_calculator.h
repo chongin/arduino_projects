@@ -67,8 +67,9 @@ float CalcFormula(String formula, bool & result)
     if (end_index < 0)
     {
       result = false;
-      return -99999999.0;
+      return -9999.0;
     }
+    
     String subFormula = formula.substring(start_index + 1, end_index);
     //Serial.println("sub: " + subFormula);
     float value = CalcFormula(subFormula, result);

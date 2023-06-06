@@ -25,6 +25,7 @@ public:
   {
     _game_id++;
     int* one_set = _game_deck_generator->RandomOneSet();
+    lcd_Mgr->SetNumbers(one_set, _game_deck_generator->GetCardNumber());
   }
 
   void Update()
@@ -42,6 +43,7 @@ public:
     _formula += ch;
     Serial.println(",Update after: " + _formula);
 
+    lcd_Mgr->RemoveCurrentSelection();
     lcd_Mgr->ResetSelection();
   }
 
