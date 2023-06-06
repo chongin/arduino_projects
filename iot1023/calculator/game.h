@@ -91,6 +91,17 @@ public:
     }
   }
 
+  bool IsWin() {
+    return _game_state == GameState::Win;
+  }
+
+  bool IsLost() {
+    return _game_state == GameState::Lost;
+  }
+
+  bool IsFail() {
+    return _game_state == GameState::Failed;
+  }
 private:
   int GetSeconds()
   {
@@ -131,8 +142,8 @@ private:
 private:
   LCDMgr * lcd_Mgr = NULL;
   GameDeckGenerator * _game_deck_generator = NULL;
-  //String _formula = "3+4*5-6/3";
-  String _formula;
+  String _formula = "3+4*5-6/3";
+  //String _formula;
   GameState _game_state;
   int _seconds = millis() / 1000;
   int _game_id = 0;
