@@ -2,7 +2,7 @@
 #include "formula_calculator.h"
 
 struct GameData {
-  int* Cards; 
+  int* Cards; //don't delete, handle it by generator
   int CarSize;
   int GameID;
   GameData(int* cards, int car_size, int game_id): Cards(cards), CarSize(car_size),
@@ -41,6 +41,11 @@ public:
 
   void UpdateFormula()
   {
+    //check if already selected all number
+    if (!_game_scene->IsCanBeSelected()) {
+      Serial.println("Cannot update formula now,because no number exist.");
+      return;
+    }
     char ch = _game_scene->GetCurrentSelection();
     Serial.print("Update before: " + _formula);
     Serial.print(",Add char: ");
@@ -100,17 +105,10 @@ public:
     }
   }
 
-  bool IsWin() {
-    return _game_state == GameState::Win;
+  GameState GetGameState() {
+    return _game_state;
   }
-
-  bool IsLost() {
-    return _game_state == GameState::Lost;
-  }
-
-  bool IsFail() {
-    return _game_state == GameState::Failed;
-  }
+  
 private:
   int GetSeconds()
   {
