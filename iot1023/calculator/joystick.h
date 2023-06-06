@@ -5,8 +5,8 @@
 #define UP_THRESHOLD    400
 #define DOWN_THRESHOLD  800
 
-#define VRX_PIN  A0 // Arduino pin connected to VRX pin
-#define VRY_PIN  A1 // Arduino pin connected to VRY pin
+#define VRX_PIN  A0 // VRX pin
+#define VRY_PIN  A1 // VRY pin
 
 enum CommandEnum
 {
@@ -63,7 +63,7 @@ public:
   {
     int x_value = analogRead(VRX_PIN);
     int y_value = analogRead(VRY_PIN);
-    printXY(x_value, y_value);
+    //printXY(x_value, y_value);
 
     CommandEnum command = CommandEnum::None;
     if (x_value < LEFT_THRESHOLD)
@@ -106,8 +106,6 @@ private:
   }
 private:
   CommandEnum _current_command;
-  int _vx_pin;
-  int _vy_pin;
 };
 
 

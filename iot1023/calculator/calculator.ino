@@ -1,14 +1,15 @@
-int i = 0;
 #include "joystick.h"
-#include "Lcd.h"
+#include "game.h"
 
 JoyStick * current_joy_stick = NULL;
-LCDMgr * lcd_Mgr = NULL;
+Game* game = NULL;
+
 void setup() 
 {
   Serial.begin(9600);
   current_joy_stick = new JoyStick();
-  lcd_Mgr = new LCDMgr();
+  game = new Game();
+  game->Start();
 }
 
 void loop() 
@@ -17,28 +18,10 @@ void loop()
   if (current_joy_stick->CurrentCommand() != CommandEnum::None)
   {
     Serial.println("DoSomething:" + current_joy_stick->GetCommandStr());
-    HandleCommand(current_joy_stick->CurrentCommand());
+    game->HandleCommand(current_joy_stick->CurrentCommand());
   }
   
-  lcd_Mgr->UpdateDraw();
+  game->Update();
   delay(600);
 }
 
-void HandleCommand(CommandEnum command)
-{
-  switch(command)
-  {
-    case CommandEnum::Left:
-      lcd_Mgr->ChangeShowOption();
-      break;
-    case CommandEnum::Right:
-      //str = "Right";
-      break;
-    case CommandEnum::Up:
-      lcd_Mgr->IncreaseOptionIndex();
-      break;
-    case CommandEnum::Down:
-      lcd_Mgr->DecreaseOptionIndex();
-      break;
-  }
-}

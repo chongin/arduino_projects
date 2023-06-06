@@ -33,7 +33,7 @@ public:
   void DrawString(String str, int start_col, int row)
   {
     int length = str.length();
-    for (i = 0; i < length; ++i)
+    for (int i = 0; i < length; ++i)
     {
       _lcd->setCursor(start_col + i, row);
       _lcd->print(str[i]);
