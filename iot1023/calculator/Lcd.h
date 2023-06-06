@@ -58,6 +58,49 @@ public:
     // }
 }
 
+void IncreaseOptionIndex()
+{
+  if (_default_show_number)
+  {
+    _current_number_index += 1;
+    _current_number_index %= 10;
+  }
+  else {
+    _current_option_index += 1;
+    _current_option_index %= 7;
+  }
+}
+
+void DecreaseOptionIndex()
+{
+  if (_default_show_number)
+  {
+    _current_number_index -= 1;
+    _current_number_index %= 10;
+  }
+  else {
+    _current_option_index -= 1;
+    _current_option_index %= 7;
+  }
+}
+
+void ChangeShowOption()
+{
+  _default_show_number = !_default_show_number;
+  _current_option_index = 0;
+  _current_number_index = 0;
+}
+
+void MoveForward()
+{
+
+}
+
+void MoveBackward()
+{
+
+}
+
 private:
   void InitOptions()
   {
@@ -69,15 +112,14 @@ private:
   }
 
 private:
-  char* _symbol_options;
-  int _symbol_option_size;
-  int* _numberArray;
-
   LcdGrphic* _lcd_grphic;
   int _current_row;
   int _current_col;
-
   String _formula;
+  
+  char* _symbol_options;
+  int _symbol_option_size;
+  int* _numberArray;
   int _current_option_index = 0;
   int _current_number_index = 0;
   bool _default_show_number = true;

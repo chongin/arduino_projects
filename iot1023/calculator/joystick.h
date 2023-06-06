@@ -55,7 +55,6 @@ public:
       case CommandEnum::Down:
         str = "Down";
         break;
-        
     }
     return str;
   }

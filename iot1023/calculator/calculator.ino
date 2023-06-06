@@ -13,12 +13,32 @@ void setup()
 
 void loop() 
 {
-  // current_joy_stick->UpdateCommand();
-  // if (current_joy_stick->CurrentCommand() != CommandEnum::None)
-  // {
-  //   Serial.println("DoSomething:" + current_joy_stick->GetCommandStr());
-  // }
+  current_joy_stick->UpdateCommand();
+  if (current_joy_stick->CurrentCommand() != CommandEnum::None)
+  {
+    Serial.println("DoSomething:" + current_joy_stick->GetCommandStr());
+    HandleCommand(current_joy_stick->CurrentCommand());
+  }
   
   lcd_Mgr->UpdateDraw();
-  delay(1000);
+  delay(600);
+}
+
+void HandleCommand(CommandEnum command)
+{
+  switch(command)
+  {
+    case CommandEnum::Left:
+      lcd_Mgr->ChangeShowOption();
+      break;
+    case CommandEnum::Right:
+      //str = "Right";
+      break;
+    case CommandEnum::Up:
+      lcd_Mgr->IncreaseOptionIndex();
+      break;
+    case CommandEnum::Down:
+      lcd_Mgr->DecreaseOptionIndex();
+      break;
+  }
 }
