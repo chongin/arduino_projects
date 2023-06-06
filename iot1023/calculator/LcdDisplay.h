@@ -8,6 +8,22 @@ public:
     initializeGraphics();
   }
 
+  void DrawFlashingSymbol(int col, int row)
+  {
+    _lcd->setCursor(col, row);
+    _lcd->print('_');
+  }
+
+  void DrawString(String str, int start_col, int row)
+  {
+    int length = str.length();
+    for (i = 0; i < length; ++i)
+    {
+      _lcd->setCursor(start_col + i, row);
+      _lcd->print(str[i]);
+    }
+  }
+
   void DrawPicture(char name, int col, int row)
   {
     _lcd->setCursor(col, row);

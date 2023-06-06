@@ -20,5 +20,5 @@ void loop()
   // }
   
   lcd_Mgr->UpdateDraw();
-  delay(500);
+  delay(1000);
 }
