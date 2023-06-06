@@ -4,13 +4,16 @@
 #include "game.h"
 #include "game_deck_generator.h"
 #include "sounds.h"
+#include "game_history.h"
 
 class GameManager
 {
 public:
   GameManager()
   {
-    InitScene();
+    _game_scene = new LCDMgr();
+    _game_deck_generator = new GameDeckGenerator();
+    _game_history = new GameHistory();
   }
 
   ~GameManager()
@@ -18,6 +21,7 @@ public:
     delete _game_scene;
     delete _current_game;
     delete _game_deck_generator;
+    delete _game_history;
   }
 
   Game* GetCurrentGame()
@@ -43,7 +47,9 @@ public:
   {
     if (_current_game->GetGameState() != GameState::Started) {
       PlaySound(buzzerPin);
-      
+      _game_history->UpdateHistory(_current_game);
+      _game_scene->UpdateWinHistoryData(_game_history->GetWinCount(), 
+        _game_history->GetLostCount(), _game_history->GetFailCound());
       _current_game = CreateNewGame();
     }
   }
@@ -62,11 +68,6 @@ private:
       Serial.println("Fail");
     }
   }
-  void InitScene()
-  {
-    _game_scene = new LCDMgr();
-     _game_deck_generator = new GameDeckGenerator();
-  }
 
   GameData* CreateGameData()
   {
@@ -81,4 +82,5 @@ private:
   Game* _current_game = NULL;
   LCDMgr* _game_scene= NULL;
   GameDeckGenerator* _game_deck_generator = NULL;
+  GameHistory* _game_history = NULL;
 };
