@@ -1,5 +1,6 @@
 #include "Lcd.h"
 #include "formula_calculator.h"
+#include "game_deck_generator.h"
 
 enum GameState
 {
@@ -17,11 +18,13 @@ public:
   {
     _game_state = GameState::Inited;
     lcd_Mgr = new LCDMgr();
+    _game_deck_generator = new GameDeckGenerator();
   }
 
   void Start()
   {
     _game_id++;
+    int* one_set = _game_deck_generator->RandomOneSet();
   }
 
   void Update()
@@ -40,11 +43,6 @@ public:
     Serial.println(",Update after: " + _formula);
 
     lcd_Mgr->ResetSelection();
-  }
-
-  void IsGameOver()
-  {
-    
   }
 
   void CalculateResult()
@@ -130,6 +128,7 @@ private:
   }
 private:
   LCDMgr * lcd_Mgr = NULL;
+  GameDeckGenerator * _game_deck_generator = NULL;
   //String _formula = "3+4*5-6/3";
   String _formula;
   GameState _game_state;
