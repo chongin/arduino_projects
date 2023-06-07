@@ -24,6 +24,10 @@ public:
     delete _game_history;
   }
 
+  void Init() {
+    _game_scene->DrawBanner();
+  }
+  
   Game* GetCurrentGame()
   {
     return _current_game;

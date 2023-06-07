@@ -19,6 +19,7 @@ void setup()
   current_joy_stick = new JoyStick();
 
   game_mgr = new GameManager();
+  game_mgr->Init();
   game_mgr->CreateNewGame();
 }
 

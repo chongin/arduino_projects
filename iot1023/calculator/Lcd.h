@@ -1,6 +1,7 @@
 #pragma once
 #include <LiquidCrystal.h>
 #include "lcd_display.h"
+#include "game_banner.h"
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 const int ContrastValue = 100;
@@ -32,6 +33,13 @@ public:
     lcd.begin(16, 2);
     _lcd_grphic = new LcdGrphic(&lcd);
     ResetScene();
+  }
+
+  void DrawBanner()
+  {
+    GameBannerGrphic* banner = new GameBannerGrphic(&lcd);
+    banner->DrawBanner();
+    delete banner;
   }
 
   void ResetScene() 
