@@ -278,8 +278,8 @@ private:
   int _current_row;
   int _current_col;
   
-  char* _symbol_options = new char[7]{'+', '-', '*', '/', '=', '(', ')'};
-  int _symbol_option_size = 7;
+  char* _symbol_options = new char[6]{'+', '-', '*', '/', '(', ')'};
+  int _symbol_option_size = 6;
   int* _number_array = NULL;
   int _number_size = 0;
 
