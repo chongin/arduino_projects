@@ -36,6 +36,7 @@ public:
 
   void ResetScene() 
   {
+    lcd.clear();
     _current_row = 1;
     _current_col = 0;
     _flashing_value = 0;
@@ -76,8 +77,6 @@ public:
 
   void UpdateView(String formula, int seconds) 
   {
-    lcd.clear();
-
     UpdateFirstRowView(seconds);
     UpdateSecondRowView(formula);
   }
@@ -207,7 +206,12 @@ public:
 
   bool IsCanBeSelected()
   {
-    return _number_array != NULL;
+    if (_default_show_number){
+      return _number_array != NULL;
+    } 
+    else {
+      return true;
+    }
   }
 private:
   void printNumberArray()
@@ -227,7 +231,6 @@ private:
     _lcd_grphic->DrawString(Numbers, 0, 0);
     for(int i = 0; i < _orginal_size; ++i)
     {
-      Serial.println(String("FFFFFFFF:") + _orginal_number_array[i]);
       _lcd_grphic->DrawNumber(_orginal_number_array[i], Numbers.length() + i, 0);
     }
 
@@ -267,7 +270,7 @@ private:
   int _current_row;
   int _current_col;
   
-  char* _symbol_options = new char[7]{'+', '-', '*', '/', '=', '{', '}'};
+  char* _symbol_options = new char[7]{'+', '-', '*', '/', '=', '(', ')'};
   int _symbol_option_size = 7;
   int* _number_array = NULL;
   int _number_size = 0;

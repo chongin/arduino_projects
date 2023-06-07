@@ -86,4 +86,3 @@ float CalcFormula(String formula, bool & result)
   result = true;
   return evaluateFormula(formula);
 }
-

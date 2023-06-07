@@ -62,10 +62,10 @@ public:
       case '=':
         _lcd->write(byte(4));
         break;
-      case '{':
+      case '(':
         _lcd->write(byte(5));
         break;
-      case '}':
+      case ')':
         _lcd->write(byte(6));
         break;
     }

@@ -68,7 +68,9 @@ public:
     bool res = false;
     float result = CalcFormula(_formula, res);
     if (res) {
-      Serial.print("CalcFormula success, result: ");
+      Serial.print("Cal Formula:");
+      Serial.print(_formula);
+      Serial.print(", result: ");
       Serial.println(result);
       _formula += "=" + keepOnePrecision(result);
 
@@ -155,8 +157,8 @@ private:
 private:
   LCDMgr * _game_scene = NULL;
   GameData* _game_data = NULL;
-  String _formula = "3+4*5-6/3";
-  //String _formula;
+  //String _formula = "4+4*5";
+  String _formula;
   GameState _game_state;
   int _seconds = millis() / 1000;
 };
