@@ -48,7 +48,9 @@ public:
     _current_row = 1;
     _current_col = 0;
     _flashing_value = 0;
-    ResetSelection();
+    _current_option_index = 0;
+    _current_number_index = 0;
+    _default_show_number = true;
     if (_number_array != NULL) {
       delete _number_array;
       _number_array = NULL;
@@ -65,8 +67,7 @@ public:
 
   void SetNumbers(int* number_array, int number_size)
   {
-    if (_number_array != NULL)
-    {
+    if (_number_array != NULL){
       delete _number_array;
     }
 
@@ -205,11 +206,11 @@ public:
     }
   }
 
-  void ResetSelection()
+  void ChangeSelectionMode()
   {
     _current_option_index = 0;
     _current_number_index = 0;
-    _default_show_number = true;
+    _default_show_number = !_default_show_number;
   }
 
   bool IsCanBeSelected()

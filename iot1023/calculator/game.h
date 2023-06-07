@@ -55,7 +55,7 @@ public:
     Serial.println(",Update after: " + _formula);
 
     _game_scene->RemoveCurrentSelection();
-    _game_scene->ResetSelection();
+    _game_scene->ChangeSelectionMode();
   }
 
   void CalculateResult()
