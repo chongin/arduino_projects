@@ -3,9 +3,13 @@
 #include "lcd_display.h"
 #include "game_banner.h"
 
-
+const int rs = 12;
+const int en = 11;
+const int d4 = 5;
+const int d5 = 4;
+const int d6 = 3;
+const int d7 = 2;
 const int ContrastValue = 100;
-
 const String Numbers = "N:";
 
 struct GameHistoryDrawing {
@@ -29,7 +33,7 @@ class LCDMgr
 public:
   LCDMgr()
   {
-    _lcd = new LiquidCrystal(12, 11, 5, 4, 3, 2);
+    _lcd = new LiquidCrystal(rs, en, d4, d5, d6, d7);
     analogWrite(6, ContrastValue);
     _lcd->begin(16, 2);
    
@@ -50,6 +54,12 @@ public:
     delete banner;
   }
 
+  void DrawGameResult(bool win, int buzzer_pin)
+  {
+    GameBannerGrphic* banner = new GameBannerGrphic(_lcd);
+    banner->DrawGameResult(win, buzzer_pin);
+    delete banner;
+  }
   void ResetScene() 
   {
     _lcd->clear();
@@ -92,10 +102,10 @@ public:
     //printNumberArray();
   }
 
-  void UpdateView(String formula, int seconds) 
+  void UpdateView(String formula, int seconds, bool is_started) 
   {
     UpdateFirstRowView(seconds);
-    UpdateSecondRowView(formula);
+    UpdateSecondRowView(formula, is_started);
   }
 
   void IncreaseOptionIndex()
@@ -260,16 +270,19 @@ private:
     _lcd_grphic->DrawTime(seconds, 0);
   }
 
-  void UpdateSecondRowView(String formula)
+  void UpdateSecondRowView(String formula, bool is_started)
   {
-     _flashing_value++;
     if (formula.length() > 0)
     {
       _lcd_grphic->DrawString(formula, 0, _current_row);
     }
 
+    if (!is_started){
+      //game not started, no need to show flashing and number or symbol
+      return;
+    }
     int next_pos = formula.length();
-    if (_flashing_value % 2 == 0)
+    if (_flashing_value++ % 2 == 0)
     {
       _lcd_grphic->DrawFlashingSymbol(next_pos, _current_row);
     } 

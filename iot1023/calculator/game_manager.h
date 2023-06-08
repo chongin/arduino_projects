@@ -47,32 +47,20 @@ public:
     return _current_game;
   }
 
-  void CheckNeedStartGame(int buzzerPin)
+  void CheckNeedStartGame(int buzzer_pin)
   {
     if (_current_game->GetGameState() != GameState::Started) {
-      PlaySound(buzzerPin);
+
       _game_history->UpdateHistory(_current_game);
       _game_scene->UpdateWinHistoryData(_game_history->GetWinCount(), 
-        _game_history->GetLostCount(), _game_history->GetFailCound());
+          _game_history->GetLostCount(), _game_history->GetFailCound());
+      _game_scene->DrawGameResult(_current_game->GetGameState() == GameState::Win, buzzer_pin);
+
       _current_game = CreateNewGame();
     }
   }
 
 private:
-  void PlaySound(int buzzerPin)
-  {
-    if (_current_game->GetGameState() == GameState::Win) {
-      playWinSound(buzzerPin);
-      Serial.println("Win");
-    } else if (_current_game->GetGameState() == GameState::Lost) {
-      playLostSound(buzzerPin);
-      Serial.println("Lost");
-    } else if (_current_game->GetGameState() == GameState::Failed) {
-      playFailSound(buzzerPin);
-      Serial.println("Fail");
-    }
-  }
-
   GameData* CreateGameData()
   {
     int* one_car_set = _game_deck_generator->RandomOneSet();

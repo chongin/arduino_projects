@@ -27,13 +27,36 @@ public:
    
     delay(1000);
     _lcd->clear();
-    // _lcd->setCursor(3, 0);
-    // _lcd->print("24 Solver");
-    // _lcd->setCursor(3, 1);
-    // _lcd->print("Good Luck");
-    // delay(2000);
-    //  _lcd->clear();
-  }  
+    _lcd->setCursor(3, 0);
+    _lcd->print("24 Solver");
+    _lcd->setCursor(3, 1);
+    _lcd->print("Good Luck");
+    delay(2000);
+     _lcd->clear();
+  }
+
+  void DrawGameResult(bool win, int buzzer_pin){
+    delay(1000);
+    if (win) {
+      _lcd->clear();
+      //_lcd->setBacklight(1); //belong to Adafruit_LiquidCrystal, not include in LiquidCrystal
+      _lcd->setCursor(3, 0);
+      _lcd->print("You Win");
+      _lcd->setCursor(3, 1);
+      _lcd->print("Congrat!");
+      playWinSound(buzzer_pin);
+      delay(2000);
+      //_lcd->setBacklight(0);
+    } else {
+      _lcd->clear();
+      _lcd->setCursor(3, 0);
+      _lcd->print("You Lost");
+      _lcd->setCursor(2, 1);
+      _lcd->print("keep Going!");
+      playLostSound(buzzer_pin);
+      delay(2000);
+    }
+  }
 private:
   int _row0 = 0;
   int _row1 = 1;

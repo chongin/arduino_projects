@@ -36,7 +36,8 @@ public:
 
   void Update()
   {
-    _game_scene->UpdateView(_formula, GetSeconds());
+    bool is_started = _game_state == GameState::Started;
+    _game_scene->UpdateView(_formula, GetSeconds(), is_started);
   }
 
   void UpdateFormula()
@@ -85,7 +86,7 @@ public:
       Serial.print("CalcFormula failed,  maybe formula is wrong.");
     }
 
-    PrintGameInfo();
+    //PrintGameInfo();
   }
 
   void HandleCommand(CommandEnum command)
@@ -155,7 +156,9 @@ private:
     int intPart = int(number);
     int decimalPart = int(number * 10) % 10;
 
-    snprintf(result, sizeof(result), "%d.%d", intPart, decimalPart);
+    //snprintf(result, sizeof(result), "%d.%d", intPart, decimalPart);
+    //don't change to float, just change to int
+    snprintf(result, sizeof(result), "%d", intPart);
     return String(result);
   }
 private:

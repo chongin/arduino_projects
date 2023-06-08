@@ -2,7 +2,6 @@
 #include "game_manager.h"
 
 JoyStick * current_joy_stick = NULL;
-Game* game = NULL;
 GameManager* game_mgr = NULL;
 
 const int LED_PIN = 9;
@@ -37,8 +36,8 @@ void loop()
   CheckAndCalculateResult();
   game_mgr->GetCurrentGame()->Update();
   game_mgr->CheckNeedStartGame(BUZZER_PIN);
-  
-  delay(600);
+
+  delay(500);
 }
 
 void CheckAndCalculateResult()
