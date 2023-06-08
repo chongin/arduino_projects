@@ -1,5 +1,6 @@
 #pragma once
 
+//melody sounds comes from chat gpt, I am not good at music
 void playWinSound(int speaker_pin) {
   int melody[] = {659, 659, 880, 659, 523, 587, 494, 523};
   int noteDuration = 200;

@@ -24,10 +24,10 @@ public:
     delete _game_history;
   }
 
-  void Init() {
-    _game_scene->DrawBanner();
+  void Init(int buzzer_pin) {
+    _game_scene->DrawBanner(buzzer_pin);
   }
-  
+
   Game* GetCurrentGame()
   {
     return _current_game;

@@ -1,4 +1,6 @@
 #pragma once
+
+//function comes from chatgpt and update it a little
 float evaluateFormula(String formula) {
   // Remove all whitespaces from the formula
   formula.replace(" ", "");
@@ -58,6 +60,7 @@ bool hasParenthese(String formula)
   return index >= 0;
 }
 
+// chat gpt cannot handle a formular include '()', so I Write it byself 
 float CalcFormula(String formula, bool & result)
 {
   formula.replace(" ", "");

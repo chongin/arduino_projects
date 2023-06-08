@@ -11,7 +11,7 @@ public:
     _lcd = lcd;
   }
 
-  void DrawBanner()
+  void DrawBanner(int buzzer_pin)
   {
     _lcd->clear();
     char text1[] = "IoT 1023";
@@ -22,11 +22,11 @@ public:
       _lcd->write(text1[i]);
       _lcd->setCursor(4 + i, 1);
       _lcd->write(text2[i]);
-      playTone(17, _welcome_tones[i], _good_luck_durations[i]);
+      playTone(buzzer_pin, _welcome_tones[i], _good_luck_durations[i]);
     }
    
     delay(1000);
-     _lcd->clear();
+    _lcd->clear();
     // _lcd->setCursor(3, 0);
     // _lcd->print("24 Solver");
     // _lcd->setCursor(3, 1);

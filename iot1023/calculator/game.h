@@ -111,6 +111,10 @@ public:
     return _game_state;
   }
   
+  String GetFormula()
+  {
+    return _formula;
+  }
 private:
   int GetSeconds()
   {
@@ -157,7 +161,7 @@ private:
 private:
   LCDMgr * _game_scene = NULL;
   GameData* _game_data = NULL;
-  //String _formula = "4+4*5";
+  //String _formula = "(4+4)*(5-3)";
   String _formula;
   GameState _game_state;
   int _seconds = millis() / 1000;

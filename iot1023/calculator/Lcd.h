@@ -3,7 +3,7 @@
 #include "lcd_display.h"
 #include "game_banner.h"
 
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
 const int ContrastValue = 100;
 
 const String Numbers = "N:";
@@ -29,22 +29,30 @@ class LCDMgr
 public:
   LCDMgr()
   {
+    _lcd = new LiquidCrystal(12, 11, 5, 4, 3, 2);
     analogWrite(6, ContrastValue);
-    lcd.begin(16, 2);
-    _lcd_grphic = new LcdGrphic(&lcd);
+    _lcd->begin(16, 2);
+   
+    _lcd_grphic = new LcdGrphic(_lcd);
     ResetScene();
   }
 
-  void DrawBanner()
+  ~LCDMgr()
   {
-    GameBannerGrphic* banner = new GameBannerGrphic(&lcd);
-    banner->DrawBanner();
+    delete _lcd;
+    delete _lcd_grphic;
+  }
+
+  void DrawBanner(int buzzer_pin)
+  {
+    GameBannerGrphic* banner = new GameBannerGrphic(_lcd);
+    banner->DrawBanner(buzzer_pin);
     delete banner;
   }
 
   void ResetScene() 
   {
-    lcd.clear();
+    _lcd->clear();
     _current_row = 1;
     _current_col = 0;
     _flashing_value = 0;
@@ -101,25 +109,26 @@ public:
       _current_number_index += 1;
       _current_number_index %= _number_size;
 
-      Serial.print(String("I, Current number index:") + _current_number_index);
-      Serial.println(String(", Current number:") + _number_array[_current_number_index]);
+      //Serial.print(String("I, Current number index:") + _current_number_index);
+      //Serial.println(String(", Current number:") + _number_array[_current_number_index]);
 
-      printNumberArray();
+      //printNumberArray();
     }
     else {
       _current_option_index += 1;
       _current_option_index %= _symbol_option_size;
 
-      Serial.print(String("I, Current option index:") + _current_option_index);
-      Serial.println(String(", Current option:") + _symbol_options[_current_option_index]);
+     // Serial.print(String("I, Current option index:") + _current_option_index);
+      //Serial.println(String(", Current option:") + _symbol_options[_current_option_index]);
     }
   }
 
   void DecreaseOptionIndex()
   {
+    Serial.println("DecreaseOptionIndex Run");
     if (_default_show_number) {
       if (_number_array == NULL) {
-        Serial.println("D, All element are selected.");
+        Serial.print("D, All element are selected.");
         return;
       }
       _current_number_index -= 1;
@@ -128,10 +137,10 @@ public:
       }
       _current_number_index %= _number_size;
       
-      Serial.print(String("D, Current number index:") + _current_number_index);
-      Serial.println(String(", Current number:") + _number_array[_current_number_index]);
+      //Serial.print(String("D, Current number index:") + _current_number_index);
+      //Serial.println(String(", Current number:") + _number_array[_current_number_index]);
 
-      printNumberArray();
+      //printNumberArray();
     }
     else {
       _current_option_index -= 1;
@@ -140,8 +149,8 @@ public:
       }
       _current_option_index %= _symbol_option_size;
 
-      Serial.print(String("D, Current option index:") + _current_option_index);
-      Serial.println(String(", Current option:") + _symbol_options[_current_option_index]);
+      //Serial.print(String("D, Current option index:") + _current_option_index);
+     // Serial.println(String(", Current option:") + _symbol_options[_current_option_index]);
     }
   }
 
@@ -227,8 +236,8 @@ private:
   {
     Serial.print(String("Total number count:") + _number_size);
     for (int i = 0; i < _number_size; ++i) {
-      Serial.print(String(",Index:") + i);
-      Serial.print(String(", value:") + _number_array[i]);
+    //  Serial.print(String(",Index:") + i);
+    //  Serial.print(String(", value:") + _number_array[i]);
     }
     Serial.println("");
   }
@@ -243,12 +252,12 @@ private:
       _lcd_grphic->DrawNumber(_orginal_number_array[i], Numbers.length() + i, 0);
     }
 
-    //Draw timer
-    _lcd_grphic->DrawTime(seconds, 0);
-
-    //Draw game history
+     //Draw game history
     int start_pos = 7;
     _lcd_grphic->DrawString(_game_history_drawing.ToString(), start_pos, 0);
+
+    //Draw timer
+    _lcd_grphic->DrawTime(seconds, 0);
   }
 
   void UpdateSecondRowView(String formula)
@@ -275,6 +284,7 @@ private:
     }
   }
 private:
+  LiquidCrystal* _lcd = NULL;
   LcdGrphic* _lcd_grphic = NULL;
   int _current_row;
   int _current_col;
