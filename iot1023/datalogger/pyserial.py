@@ -7,7 +7,7 @@ import os
 
 running = True
 
-ser = serial.Serial(port='/dev/cu.usbmodem11301', baudrate=9600, timeout=1)
+ser = serial.Serial(port='/dev/cu.usbmodem1401', baudrate=115200, timeout=1)
 file_path = "./data.csv"
 if os.path.exists(file_path):
     os.remove(file_path)
